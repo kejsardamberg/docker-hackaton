@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>DevOps-hackaton Zington Quality</title>
+        <meta charset="utf-8" />
+        <meta name="keywords" content="DevOps hackaton Zington">
+        <meta name="description" content="DevOps hackaton Zington.">
+        <meta name="author" content="Jorgen Damberg">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="./res/favicon.svg">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+        <meta http-equiv="Pragma" content="no-cache">
+        <meta http-equiv="Expires" content="0">    
+        <style>
+            body {
+                padding: 5rem;
+                background-color: white;
+                color: #00005A;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: large;
+            }
+
+            h3 {
+                margin-top: 3rem;
+            }
+
+            pre::-webkit-scrollbar {
+                background-color: #3a3a3a;
+            }
+
+            pre::-webkit-scrollbar-thumb {
+                background: #f2dede;
+                border-radius: 1px;
+            }
+
+            pre {
+                background: #3a3a3a;
+                color: #f2dede;
+                -webkit-box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.75);
+                -moz-box-shadow: 0 0 8px 0 rgba(193, 66, 66, 0.5);
+                box-shadow: 0 0 8px 0 rgba(193, 66, 66, 0.5);
+            }
+
+            h2 {
+                margin-top: 4rem;
+            }
+
+            code {
+                background: #3a3a3a;
+                font-family: monospace;
+                color: #f2dede;
+                padding-left: 0.3rem;
+                padding-right: 0.3rem;
+            }
+
+            button {
+                padding: 1rem;
+                border-radius: 2rem;
+                font-size: large;
+                margin-bottom: 2rem;
+                border: 2px solid #00005A;
+                padding-left: 2rem;
+                padding-right: 2rem;
+                cursor: pointer;
+            }
+
+            button:disabled {
+                background-color: #F1EEE7;
+                color: #00005A;
+                cursor: not-allowed;
+            }
+
+            button:enabled{
+                background-color: #00005A;
+                color: white;
+                box-shadow: 9px 8px 11px -4px rgba(0,0,0,0.75);
+                -webkit-box-shadow: 9px 8px 11px -4px rgba(0,0,0,0.75);
+                -moz-box-shadow: 9px 8px 11px -4px rgba(0,0,0,0.75);        
+
+            }
+
+            button.hint {
+                margin-top: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            div.hint {
+                margin-top: 2rem;
+                padding: 2rem;
+                border: 3px solid #00005A;
+                background-color: skyblue;
+                color: #00005A;
+                margin-bottom: 4rem;
+            }
+
+            table {
+                border: 2px solid #00005A;
+                border-collapse: collapse;
+            }
+
+            #cheat-button {
+                float: right;
+            }
+
+            th {
+                text-align: left;
+                font-weight: bold;
+                padding-left: 1rem;
+                padding-right: 2rem;
+                border: 1px solid #00005A;
+                border-bottom: 2px solid #00005A;
+            }
+
+            td {
+                text-align: left;
+                padding-left: 1rem;
+                padding-right: 2rem;
+                border: 1px solid #00005A;
+            }
+        </style>
+        <script>
+        </script>
+    </head>
+    <body>
+       <h1>Docker cheat sheet</h1>
+       <p>
+            Följande är en sammanställning av de vanligaste kommandona och växlarna till docker. 
+       </p>
+       <h2>Docker</h2>
+       <h3>Allmänt</h3>
+       <table>
+        <tr>
+            <th>Kommando</th>
+            <th>Betydelse/verkan</th>
+        </tr>
+        <tr>
+            <td><code>docker</code></td>
+            <td>Ett enkelt docker utan mer info skriver ut grundläggande kommandon som kan göras som fortsättning från docker-kommandot.</td>
+        </tr>
+        <tr>
+            <td><code>docker ps</code></td>
+            <td>Listar de containers som körs just nu</td>
+        </tr>
+        <tr>
+            <td><code>docker ps -a</code></td>
+            <td>Listar alla registrerade containers med aktuell status</td>
+        </tr>
+        <tr>
+
+        </tr>
+       </table>
+       <h3>Images</h3>
+       <table>
+        <tr>
+            <th>Kommando</th>
+            <th>Betydelse/verkan</th>
+        </tr>
+        <tr>
+            <td><code>docker pull &lt;image-name&gt;</code></td>
+            <td>Hämtar hem en image med givet namn från Docker Hub.</td>
+        </tr>
+        <tr>
+            <td><code>docker pull &lt;image-name&gt;:&lt;tag&gt;</code></td>
+            <td>Hämtar hem en image med givet namn och specificerad tag (version/utgåva) från Docker Hub.</td>
+        </tr>
+        <tr>
+            <td><code>docker build -t &lt;your-own-tag-name&gt; .</code></td>
+            <td>Bygger en image med angivet tag/namn från den Dockerfile som finns i angiven sökväg (där punkt indikerar nuvarande katalog).</td>
+        </tr>
+        <tr>
+            <td><code>docker images</code></td>
+            <td>Listar registrerade/tillgängliga images.</td>
+        </tr>
+        <tr>
+            <td><code>docker images --help</code></td>
+            <td>Skriver ut hjälp kring docker images-kommandon.</td>
+        </tr>
+        <tr>
+            <td><code>docker run --rm -dit --name lab1-container -p 8080:80 lab1-apache-image</code></td>
+            <td>I exemplet ovan byggs och startas en container med namnet <q>lab1-container</q> från en image som heter <q>lab1-apache-image</q> och får portarna 8080 mappade till 80. Växeln <code>--rm</code> anger att den containern är tillfällig och ska tas bort när den stängs ner.</td>
+        </tr>
+       </table>
+
+       <h3>Containers</h3>
+       <table>
+        <tr>
+            <th>Kommando</th>
+            <th>Betydelse/verkan</th>
+        </tr>
+        <tr>
+            <td><code>docker ps</code></td>
+            <td>Listar containers som körs.</td>
+        </tr>
+        <tr>
+            <td><code>docker ps --help</code></td>
+            <td>Skriver ut hjälp kring docker ps-kommandon.</td>
+        </tr>
+        <tr>
+            <td><code>docker ps -a</code></td>
+            <td>Skriver ut alla registrerade containers och deras status.</td>
+        </tr>
+        <tr>
+            <td><code>docker start &lt;name&gt;</code></td>
+            <td>Startar upp redan befintlig men stoppad container.</td>
+        </tr>
+        <tr>
+            <td><code>docker stopp &lt;name&gt;</code></td>
+            <td>Stänger ner container som körs.</td>
+        </tr>
+       </table>
+
+       <h3>docker-compose</h3>
+       <table>
+        <tr>
+            <th>Kommando</th>
+            <th>Betydelse/verkan</th>
+        </tr>
+        <tr>
+            <td><code>docker-compose up</code></td>
+            <td>Bygger images och startar upp containers som de är beskrivna i <strong>docker-compose.yaml</strong>-filen.</td>
+        </tr>
+        <tr>
+            <td><code>docker-compose down</code></td>
+            <td>Stänger ner de startade containrarna som startats med <code>docker-compose up</code>.</td>
+        </tr>
+        <tr>
+            <td><code>docker-compose down -rmi all</code></td>
+            <td>Stänger ner de startade containrarna och rensar bort alla deras images.</td>
+        </tr>
+        <tr>
+            <td><code>docker-compose down -rmi all -v</code></td>
+            <td>Stänger ner de startade containrarna och rensar bort alla deras images samt dessas volumes.</td>
+        </tr>
+       </table>
+    </body>
+</html>

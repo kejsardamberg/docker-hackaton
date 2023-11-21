@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>DevOps-hackaton Zington Quality</title>
+        <meta charset="utf-8" />
+        <meta name="keywords" content="DevOps hackaton Zington">
+        <meta name="description" content="DevOps hackaton Zington.">
+        <meta name="author" content="Jorgen Damberg">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="./res/favicon.svg">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+        <meta http-equiv="Pragma" content="no-cache">
+        <meta http-equiv="Expires" content="0">    
+        <style>
+            body {
+                padding: 5rem;
+                background-color: white;
+                color: #00005A;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: large;
+            }
+
+            h3 {
+                margin-top: 3rem;
+            }
+
+            pre::-webkit-scrollbar {
+                background-color: #3a3a3a;
+            }
+
+            pre::-webkit-scrollbar-thumb {
+                background: #f2dede;
+                border-radius: 1px;
+            }
+
+            pre {
+                background: #3a3a3a;
+                color: #f2dede;
+                -webkit-box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.75);
+                -moz-box-shadow: 0 0 8px 0 rgba(193, 66, 66, 0.5);
+                box-shadow: 0 0 8px 0 rgba(193, 66, 66, 0.5);
+            }
+
+            h2 {
+                margin-top: 4rem;
+            }
+
+            code {
+                background: #3a3a3a;
+                font-family: monospace;
+                color: #f2dede;
+                padding-left: 0.3rem;
+                padding-right: 0.3rem;
+            }
+
+            button {
+                padding: 1rem;
+                border-radius: 2rem;
+                font-size: large;
+                margin-bottom: 2rem;
+                border: 2px solid #00005A;
+                padding-left: 2rem;
+                padding-right: 2rem;
+                cursor: pointer;
+            }
+
+            button:disabled {
+                background-color: #F1EEE7;
+                color: #00005A;
+                cursor: not-allowed;
+            }
+
+            button:enabled{
+                background-color: #00005A;
+                color: white;
+                box-shadow: 9px 8px 11px -4px rgba(0,0,0,0.75);
+                -webkit-box-shadow: 9px 8px 11px -4px rgba(0,0,0,0.75);
+                -moz-box-shadow: 9px 8px 11px -4px rgba(0,0,0,0.75);        
+
+            }
+
+            button.hint {
+                margin-top: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            div.hint {
+                margin-top: 2rem;
+                padding: 2rem;
+                border: 3px solid #00005A;
+                background-color: skyblue;
+                color: #00005A;
+                margin-bottom: 4rem;
+            }
+
+            #cheat-button {
+                float: right;
+            }
+
+            button a {
+                color: white;
+                text-decoration: none;
+            }
+        </style>
+        <script>
+            var currentLab = 0;
+
+            function setCurrentLab(increment){
+                currentLab = currentLab + increment;
+                if(currentLab < 0) currentLab = 0;
+                let labs = document.querySelectorAll('.lab');
+                for(var i = 0; i < labs.length; i++){
+                    labs[i].style.display = 'none';
+                }
+                if(currentLab > labs.length-1) currentLab = labs.length-1;
+                document.querySelector('#previous-button').disabled = currentLab == 0;
+                document.querySelector('#next-button').disabled = currentLab == labs.length-1;
+                labs[currentLab].style.display = 'block';
+            }
+
+            function toggleHint(id, button){
+                if(document.querySelector('#' + id).style.display=='block'){
+                    document.querySelector('#' + id).style.display='none';
+                } else {
+                    document.querySelector('#' + id).style.display='block'
+                }
+                if(button.innerHTML == "Tips"){
+                    button.innerHTML = "Stäng tips";
+                } else {
+                    button.innerHTML = "Tips";
+                }
+            }
+
+            function init(){
+                let h2s = document.querySelectorAll('h2');
+                let counter = 1;
+                for(var i = 0; i < h2s.length; i++){
+                    if(h2s[i].innerHTML.toLowerCase() != 'lab') continue;
+                    h2s[i].innerHTML += " " + counter + " (av " + +(h2s.length-1) + ")";
+                    counter++;
+                }
+                setCurrentLab(0);
+            }
+        </script>
+    </head>
+    <body onload="init()">
+        <h1>DevOps-labbar</h1>
+        <br>
+        <div id="buttons">
+            <button id="previous-button" onclick="setCurrentLab(-1)">Föregående</button>
+            <button id="next-button" onclick="setCurrentLab(1)">Nästa</button>
+            <button id="cheat-button"><a href="./res/cheatsheet.html" target="_blank">Öppna cheat-sheet för kommandon</a></button>
+        </div>
+        <hr>
+        <div class="lab">
+            <h2>Förberedelser</h2>
+            <h3>DevOps</h3>
+            <p>
+                Följande labbar handlar om den tekniska sidan av DevOps. 
+            </p>
+            <p>
+                Det är i sammanhanget värdefullt att påminna om att DevOps egentligen är ett begrepp som beskriver en kultur som främjar att utvecklare själva kan ta ansvar för driften av det de skapar så att de snabbt och effektivt får insikt i driftproblem med de tjänster de skapat - så att de kan förebygga driftstörningar snarare än att reaktivt fixa dessa i efterhand.
+            </p>
+            <h3>Docker</h3>
+            <p>
+                Dessa labbövningar är koncentrerade runt verktyget <strong>Docker</strong> som är ett verktyg för att paketera ihop körbara isolerade instanser av allt som behövs för en tjänst att fungera - och bara exponera just detta.
+            </p>
+            <h3>Innan du börjar</h3>
+            <ol>
+                <li>Ladda hem och installera <strong>Docker Desktop</strong> till din dator om du inte redan har det installerat.</li>
+                <li>Ladda hem och installera <strong>git</strong> till din dator om du inte redan har det.</li>
+                <li>Skapa en lokal katalog som heter <i>DevOpsHackaton</i> eller liknande.</li>
+                <li>Öppna en kommandoprompt och gå till den nyskapade foldern.</li>
+                <li>Hämta hem labb-repositoryt antingen genom att klona ner det från GitHub eller <a href="./res/labs.zip">ladda hem som zip-fil</a> och zippa upp det lokalt i din skapade lokala folder.</li>
+            </ol>
+            <p>
+                Det finns även en <a href="./res/DevOps_hackaton.pptx">medföljande PowerPoint</a>, som egentligen är tänkt att förklaras igenom, men kanske hjälper den någon? 
+            </p>
+            <button class="hint" onclick="toggleHint('install', this);">Tips</button>
+            <div style="display: none;" id="install" class="hint">
+                Installera <strong>Docker Desktop</strong> från <a href="https://www.docker.com/products/docker-desktop/">https://www.docker.com/products/docker-desktop/</a><br>
+                och <strong>git</strong> från <a href="https://git-scm.com/downloads">https://git-scm.com/downloads</a>.             
+            </div>
+        </div>
+
+        <div class="lab">
+            <h2>Lab</h2>
+            <h3>Skapa en image</h3>
+            <p>
+                Denna övning syftar till att skapa en image med simplast tänkbara webbserver.
+            </p>
+            <p>
+                Tanken är att öva på att skapa en första <strong>Dockerfile</strong> med både portexponeringsinstruktioner och filkopiering.
+            </p>
+            <ol>
+                <li>
+                    Hämta hem en grund-docker-image som innehåller en webbserver (t.ex. med <code>docker pull httpd</code>).
+                </li>
+                <li>
+                    Skapa en fil med namnet <strong>Dockerfile</strong> (utan punkt eller filändelse) i rooten på ditt bibliotek. 
+                    Se till att den som bas använder den image du hämtade hem i steget innan och sedan kopierar filen .\Lab1\index.html till imagens servers publicerade web-root-katalog.
+                </li>
+                <li>
+                    Bygg en egen docker-image baserad på den image med webbserver du laddade hem innan.
+                </li>
+                <li>
+                    Studera output från byggandet i din konsol. Vad gör Docker när den bygger? Hur lång tid tar det?
+                </li>
+                <li>
+                    Kontrollera status på images i <strong>Docker Desktop</strong>.
+                </li>
+                <li>
+                    Använd kommandot <code>docker images</code> i en kommandoprompt för att se en listning på de images som din docker har tillgängliga.
+                </li>
+                <li>
+                    Vad får din image för namn om du inte själv uttalat tilldelar den ett namn?
+                </li>
+            </ol>
+            <p>
+                Användbara instruktioner i <strong>Dockerfile</strong> kan vara t.ex. <code>FROM</code>, <code>COPY</code> och <code>EXPOSE</code>.
+            </p>
+            <p>
+                Användbara styrkommandon i kommandofönstret kan vara <code>docker build</code> och <code>docker images</code>.
+            </p>
+            <button class="hint" onclick="toggleHint('lab1', this);">Tips</button>
+            <div style="display: none;" id="lab1" class="hint">
+                Ladda hem en grundimage med kommandot <code>docker pull httpd</code> för att ladda hem en enkel linux-kärna med en Apache webbserver på.
+                Den <strong>Dockerfile</strong> du skapar ska ligga i rooten på ditt relevanta filträd och kan se ut som så här:<br>
+                <pre>
+
+FROM httpd
+
+COPY . /usr/local/apache2/htdocs/
+
+EXPOSE 8080
+                </pre>
+                Bygg sedan en docker-image för ditt eget bruk med kommandot <code>docker build -t lab1-apache-image .</code> (notera sista punkten) och starta den med <code>docker run --rm -dit --name lab1-container -p 8080:80 lab1-apache-image</code>.
+            </div>
+        </div>
+
+        <div class="lab">
+            <h2>Lab</h2>
+            <h3>Starta en container från din egen image</h3>
+            <p>
+                I denna labb startar och stoppar vi en docker-container och lär oss hantera denna både i <strong>Docker Desktop</strong> och från kommandoprompten.
+            </p>
+            <ol>
+                <li>
+                    Starta en container av den image du skapade i förra labben och säkerställ att du med en webbläsare kan nå den fil du lade in i webbservern. 
+                </li>
+                <li>
+                    Googla skillnaderna mellan <code>docker start</code> och <code>docker run</code>. De låter snarlika men har olika beteende.
+                </li>
+                <li>
+                    Undersök även vad <code>docker run --rm</code> gör som inte vanliga <code>docker run</code> gör. 
+                </li>
+                <li>
+                    Se efter hur körläget ser ut i Docker Desktop och genom att skriva <code>docker images</code> och 
+                </li>
+                <li>
+                    Kolla i Docker Desktop hur images och containers presenteras. Prova att starta och stoppa din container från Docker Desktop.
+                </li>
+                <li>
+                    Kommandon som <code>docker images</code> visar vilka images som är registrerade/tillgängliga och kommandot <code>docker ps</code> visar vilka containers som körs. 
+                </li>
+                <li>
+                    Prova gärna att starta en container till så att du har två containrar av samma image igång, men på olika portar. Detta kan vara användbart vid t.ex. lastbalansering.
+                </li>
+            </ol>
+            <p>
+                Vill man se alla containers, även de som inte körs, kan man se dessa med <code>docker ps -a</code>. Detta kan vara användbart om man vill städa upp och ta bort containers.
+            </p>
+            <button class="hint" onclick="toggleHint('lab2', this);">Tips</button>
+            <div style="display: none;" id="lab2" class="hint">
+                Starta en container genom att ange vilken image den baseras på. För att undvika ett generiskt namn på den kan du använda attributet <code>--name</code> enligt t.ex. <code>docker run --rm -dit --name lab1-container -p 8080:80 lab1-apache-image</code>. <br>
+                Surfa därefter med en webbläsare till <code>https://localhost:8080</code> och se så att du ser samma fil som ligger i katalogen <strong>Lab1</strong>.
+            </div>
+        </div>
+
+        <div class="lab">
+            <h2>Lab</h2>
+            <h3>Städa bland containers och images</h3>
+            <p>
+                Snart när man jobbar med containers och images blir det stökigt och många av dessa och man behöver städa.
+            </p>
+            <p>
+                I denna labb ska vi prova att stoppa körande containers och sedan ta bort både containers och images. 
+                Vi har ju redan ritningen för infrastrukturen klar och kvar i vår <strong>Dockerfile</strong> så containers och images är inte något att vara nostalgisk över.
+            </p>
+            <p>
+                För att stänga ner eller ta bort images eller containrar refererar man till dem med deras ID eller namn.
+            </p>
+            <ol>
+                <li>Städa bort de images och containers som inte längre används.</li>
+            </ol>
+            <button class="hint" onclick="toggleHint('lab3', this);">Tips</button>
+            <div style="display: none;" id="lab3" class="hint">
+                I denna övning kan det ånyo vara bra att ta till kommandon som <code>docker imgages</code> och <code>docker ps -a</code>.<br>
+                Det kan också vara bra att känna till kommandot <code>docker stop</code>, <code>docker remove</code> och <code>docker image rm</code>.
+            </div>
+        </div>
+        
+        <div class="lab">
+            <h2>Lab</h2>
+            <h3>Docker i Visual Studio Code</h3>
+            <p>
+                Docker kan vara väldigt användbart under tiden man utvecklar kod. Man kan köra sin applikation direkt i Visual Studio Code - för testmiljöer och liknande.
+            </p>
+            <ol>
+                <li>Installera Visual Studio Code om du inte redan har den installerad.</li>
+                <li>Öppna Visual Studio Code.</li>
+                <li>Lägg till extension <strong>Docker</strong> och <strong>Docker Explorer</strong> om du inte redan har dessa installerade.</li>
+                <li>Notera hur det finns en Docker-ikon i vänstermarginalen. Klicka på denna. Vad ser du?</li>
+                <li>Högerklicka på de entrys du ser. Vad har du för val?</li>
+                <li>Om du nu öppnar katalogen <strong>lab5-restserver</strong> i Visual Studio Code kan du direkt komma åt Docker både i GUI och genom VS Codes inbyggda <strong>terminal</strong>.</li>
+            </ol>
+        </div>
+
+        <div class="lab">
+            <h2>Lab</h2>
+            <h3>Simpel REST-server</h3>
+            <p>
+                Statiska filer har begränsad funktionalitet. Nu ska vi fyra igång en enkel webbserver. Denna server baseras på Alpine Linux och Node.js och finns färdig i lab5.
+            </p>
+            <p>
+                Denna gång kör vi en Linux och en specifik version av Node.js.
+            </p>
+            <ol>
+                <li>Börja med att hämta en ny image för en slim Linux med Node.js: <code>docker pull node:17-alpine</code>.</li>
+                <li>Gå till katalogen <strong>lab5-restserver</strong> och studera den <strong>Dockerfile</strong> som finns där. Vad kommer denna image att göra när den byggs?</li>
+                <li>Prova att bygga en image från denna katalogs <strong>Dockerfile</strong>.</li>
+                <li>Starta containern och använd webbläsaren för att hämta serverns enkla JSON-data.</li>
+            </ol>
+            <p>
+                Detta funkar ganska smidigt, och går relativt snabbt. 
+                Men när vi ändrar något är det krångligt att omdistribuera en ny image och ny container. Det finns smidigare sätt: <strong>Volumes</strong>,
+            </p>
+            <p>
+                Det går också att trimma tiderna betänkligt genom att ändra ordningen så att mindre data läses över till imagen och mer är cachat av Docker.
+            </p>
+        </div>
+
+        <div class="lab">
+            <h2>Lab</h2>
+            <h3>Den användbara filen .dockerignore</h3>
+            <p>
+                När vi bygger koden för vår lilla REST-server hämtas beroenden och läggs in i en underkatalog till vår filkatalog. 
+                Som vår <strong>Dockerfile</strong> är utformad så kopierar den hela innehållet i denna katalog till vår image.
+                Då följer ju dessa beroenden med, vilket är onödigt eftersom de ändå hämtas hem i bygget. 
+            </p>
+            <p>
+                Vi kan undvika detta genom att skapa en <strong>.dockerignore</strong>-fil i samma katalog som vår <strong>Dockerfile</strong>. 
+            </p>
+            <p>
+                Filen <strong>.dockerignore</strong> fungerar ungefär som en <strong>.gitignore</strong> och har samma syntax, men för Docker istället för git.
+            </p>
+            <ol>
+                <li>Skapa en fil som heter <strong>.dockerignore</strong> (lägg märke till den inledande punkten) i samma katalog som din <strong>Dockerfile</strong>.</li>
+                <li>Öppna filen <strong>.dockerignore</strong> och lägg till raden <code>node_modules</code> i filen.</li>
+                <li>Spara och stäng filen.</li>
+                <li>När du nu bygger en ny image med denna fil utelämnas det som angivits i <strong>.dockerignore</strong>-filen.</li>
+                <li>Bygg denna image och starta en container och noter hur lång tid det tar och vilka steg som docker anger är cachade.</li>
+            </ol>
+        </div>
+
+        <div class="lab">
+            <h2>Lab</h2>
+            <h3>Optimerad cachning</h3>
+            <p>
+                Ett av dockers huvudnummer är att det är snabbt och smidigt och välpaketerat. 
+                Om det tar för lång tid i anspråk att jobba med docker förlorar det lite av sitt existensberättigande.
+            </p>
+            <p>
+                Samma server som i föregående lab kan fås att funka betydligt snabbare om man ändrar lite i <strong>Dockerfile</strong>. 
+            </p>
+            <ol>
+                <li>Öppna katalogen <strong>lab8-cachning</strong> och jämför dess <strong>Dockerfile</strong> med den i föregående övning. Vilka skillnader finns?</li>
+                <li>Jämför vilka steg som nu är cachade med den föregående övningen. Nu ska det gå liiite snabbare.</li>
+            </ol>
+        </div>
+
+        <div class="lab">
+            <h2>Lab</h2>
+            <h3>Koppla in lokala kataloger som Volumes till din container</h3>
+            <p>
+                Det är ju ändå tråkigt att behöva bygga om image och starta container för varje förändring. 
+                Det finns stöd i Docker som gör detta förfarande onödigt.
+            </p>
+            <p>
+                I denna övnig gör vi oss befriade från att behöva kopiera in filen i docker-containern och länkar istället 
+                in en katalog från host-maskinen som att den vore en katalog inne i docker-containern. 
+            </p>
+            <p>
+                Vi använder också ett tillägg till vår Node.js som automatiskt startar om denna när den känner av förändringar i sina filer.
+            </p>
+            <ol>
+                <li>
+                    Öppna katalogen <strong>lab10-volumes</strong> och studera dess <strong>Dockerfile</strong>.
+                </li>
+                <li>
+                    Fyra upp en container baserat på denna och prova att göra en HTTP GET med en webbläsare.  
+                </li>
+                <li>
+                    Ändra nu något data i filen <strong>app.js</strong> och ladda om sidan. 
+                </li>
+            </ol>
+            <p>
+                I detta upplägg ska resultatet ha ändrats direkt eftersom servern detekterade att det var en 
+                förändring i filerna den baseras på och startade om sig och servar nya resultat.
+            </p>
+        </div>
+
+        <div class="lab">
+            <h2>Lab</h2>
+            <h3>docker-compose</h3>
+            <p>
+                Har man flera containrar som är beroende av varandra, som en DB-server, en frontend-server och 
+                så vidare kan det snabbt bli trassligt med alla kommandon och filer. 
+                För dessa sitationer kan man använda en <strong>docker-compose.yaml</strong>-fil.
+            </p>
+            <p>
+                En <strong>docker-compose.yaml</strong>-fil ligger alltid i en rotfolder. 
+                Eftersom den är tänkt att sammanföra flera olika containers till en fungerande enhet är denna rotfolder ofta en nivå ovanför 
+                där <strong>Dockerfile</strong> skulle hamna.
+            </p>
+            <p>
+                Som filnamnet anger är det en YAML-fil, så håll ordning på indenteringen.
+            </p>
+            <p>
+                I övningen nedan har vår REST-tjänst nu även fått en front-end i form av en react-app. 
+            </p>
+            <ol>
+                <li>Öppna katalogen <strong>lab12-react</strong> och kika på dess <strong>docker-compose.yaml</strong>-fil. Förstår du strukturen?</li>
+                <li>Förflytta dig till denna katalog och skriv kommmandot <code>docker-compose up</code>. Första gången tar det några sekunder.</li>
+                <li>Kolla så att du kan nå REST-servicen via en webbläsare på port 4000.</li>
+                <li>Kolla så att du når GUI för webbtjänsten via en webbläsare på port 3000. Denna webbtjänst ropar i sin tur på REST-tjänsten som synes.</li>
+                <li>Proga kommandot <code>docker-compose down</code> i samma katalog. Nu ska tjänsten vara nerstängd.</li>
+                <li>Starta upp tjänsten igen (<code>docker-compose up</code>) och denna gång stänger du ner den med <code>docker-compose down -rmi all</code> så tar den även bort images. Lägger du till växeln <code>-v</code> tar den även bort volymerna.</li>
+            </ol>
+            <p>
+                Att använda en <strong>docker-compose.yaml</strong>-fil kan underlätta arbetet med många containers med beroenden väsentligt. 
+            </p>
+        </div>
+
+        <div class="lab">
+            <h2>Lab</h2>
+            <h3>Testautomatisering i docker</h3>
+            <p>
+                Det är inte bara exekveringsmiljöer som gagnas av docker. 
+                Även test och annat QA-arbete är hjälpta av containerisering.
+            </p>
+            <p>
+                Det finns färdiga containrar för att exekvera allehanda typer av scriptade tester.
+            </p>
+            <p>
+                Skapa en container som exekverar ett valfritt automations-script mot sidan från föregående lab.
+                Det bör finnas en lämplig image att börja med på <a href="https://hub.docker.com">https://hub.docker.com</a>.
+            </p>
+            <p>
+                Kolla också efter t.ex. JMeter-images. 
+            </p>
+        </div>
+
+        <div class="lab">
+            <h2>Lab</h2>
+            <h3>Docker i release-processen: Bygg-pipelines</h3>
+            <p>
+                Effektivitet i DevOps bygger mycket på automation för snabbhet, buggrättningsbara processer och förutsägbarhet. 
+                Byggpipelines är ett förträffligt hjälpmedel för detta.  
+            </p>
+            <p>
+                Det finns inte något som hindrar att köra CLI-kommandon i något verktyg för byggpipelines. 
+                Det borde vara nog för att exekvera och managera docker-miljöer i byggpipelines, men många byggpipelines har färdiga steg och moduler för att underlätta användningen av containers.
+            </p>
+            <p>
+                Kika t.ex. på en Azure DevOps Pipelines olika möjligheter om du har tillgång till en sådan.
+            </p>
+        </div>
+
+        <div class="lab">
+            <h2>Lab</h2>
+            <h3>Snapshots för testeffektivitet</h3>
+            <p>
+                Med hjälp av kommandot <code>docker commit</code> kan man skapa snapshots av containers. 
+            </p>
+        </div>
+
+        <div class="lab">
+            <h2>Lab</h2>
+            <h3>Kubernetes</h3>
+            <p>
+                Kubernetes används för enkel, smidig, monitorerbar, skalbar och robust drift av Docker-containers.
+            </p>
+        </div>
+
+    </body>
+</html>

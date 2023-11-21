@@ -1,0 +1,14 @@
+<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .blue { font: bold 55px sans-serif; fill: darkslateblue; }
+    .gray { font: bold 40px sans-serif; fill: darkslategray; }
+    .red { font: bold 55px sans-serif; fill: red; z-index: 1; }
+
+    /* Note that the color of the text is set with the    *
+     * fill property, the color property is for HTML only */
+    .Rrrrr { font: italic 40px serif; fill: red; }
+  </style>
+
+  <text x="0" y="60" class="blue">J</text>
+  <text x="25" y="60" class="blue">D</text>
+</svg>
