@@ -210,12 +210,17 @@
     
             <div class="lab">
                 <h2>Lab</h2>
-                <h3>Skapa en image</h3>
+                <h3>Skapa en image för en webbserver</h3>
                 <p>
-                    Denna övning syftar till att skapa en image med en enkel webbserver.
+                    Denna övning syftar till att skapa en image med en enkel webbserver. Den byggs på en image med webbservern <q>httpd</q>. 
+                    Likt alla webbservrar serverar den innehåll över HTTP som använder standardport 80. 
                 </p>
                 <p>
-                    Tanken är att öva på att skapa en första <strong>Dockerfile</strong> och få den körklar med både portexponeringsinstruktioner och filkopiering.
+                    <strong>httpd</strong> hämtar det content den serverar från sin egen katalog <i>/usr/local/apache2/htdocs/</i> så för att vi ska ha något att visa från vår webbserver behöver vi lägga in en fil där. 
+                    I denna övning används en fil (<i>/lab1/index.html</i> från den filsamling som hämtades i förra steget.
+                </p>
+                <p>
+                    Tanken med övningen är att öva på att skapa en första <strong>Dockerfile</strong> och få den körklar med både portexponeringsinstruktioner och filkopiering.
                 </p>
                 <ol>
                     <li>
@@ -225,23 +230,27 @@
                         Hämta hem en grund-docker-image som innehåller en webbserver (t.ex. med <code>docker pull httpd</code>).
                     </li>
                     <li>
-                        Skapa en fil med namnet <strong>Dockerfile</strong> (utan punkt eller filändelse) i rooten på det bibliotek du fått hem. 
-                        Se till att den som bas använder den image du hämtade hem i steget innan och sedan kopierar filen <code>.\Lab1\index.html</code> till imagens servers publicerade web-root-katalog.
+                        Skapa en fil med namnet <strong>Dockerfile</strong> (utan punkt eller filändelse) i rooten på den filstruktur du hämtade hem via git eller zip i förra steget. 
+                        Om det redan ligger en Dockerfile där kan du istället använda denna som bas. 
+                        Se till att den som bas-image använder den image du hämtade hem i steget innan (httpd) och sedan kopierar filen <code>/lab1/index.html</code> till imagens servers publicerade web-root-katalog (/usr/local/apache2/htdocs/).
                     </li>
                     <li>
-                        Bygg en egen docker-image baserad på den image med webbserver du laddade hem innan.
+                        Bygg en egen docker-image utifrån denna <i>Dockerfile</i> (utan punkt eller filändelse).
                     </li>
                     <li>
                         Studera output från byggandet i din konsol. Vad gör Docker när den bygger? Hur lång tid tar det?
                     </li>
                     <li>
-                        Kontrollera status på images i <strong>Docker Desktop</strong>.
+                        Kontrollera status på images i det grafiska användargränssnittet i <strong>Docker Desktop</strong>.
                     </li>
                     <li>
                         Använd kommandot <code>docker images</code> i en kommandoprompt för att se en listning på de images som din docker har tillgängliga.
                     </li>
                     <li>
-                        Vad får din image för namn om du inte själv uttalat tilldelar den ett namn?
+                        Vad får din image för namn om du inte själv uttalat tilldelar den ett namn (eller tag, med <code>docker build -t &lt;namn&gt;</code>? 
+                    </li>
+                    <li>
+                        Bygg en image med namnet <strong>lab1-image</strong> från din Dockerfile. 
                     </li>
                 </ol>
                 <p>
@@ -249,6 +258,7 @@
                 </p>
                 <p>
                     Användbara styrkommandon i kommandofönstret kan vara <code>docker build</code> och <code>docker images</code>.
+                    Man kan alltid skriva <code> --help</code> efter kommandot för att se vilka extra växlar/attribut man kan lägga på kommandot.
                 </p>
                 <hr>
                 <button class="hint" onclick="toggleHint('lab1', this);">Tips</button>
@@ -261,45 +271,54 @@
 
     COPY /lab1/index.html /usr/local/apache2/htdocs/
 
-    EXPOSE 8080
+    EXPOSE 80
     
                     </pre>
+                    Bygg en ny anpassad image med <code>docker build -t lab1-image .</code> (säkerställ att få med den sista punkten också). 
                 </div>
             </div>
     
             <div class="lab">
                 <h2>Lab</h2>
-                <h3>Starta en container från din egen image</h3>
+                <h3>Starta en container från din image från förra labben</h3>
                 <p>
                     I denna labb startar och stoppar vi en docker-container och lär oss hantera denna både i <strong>Docker Desktop</strong> och från kommandoprompten.
                 </p>
                 <p>
-                    Man startar en container genom att ange vilken image den baseras på. För att undvika ett generiskt namn på den kan du använda attributet <code>--name</code> enligt t.ex. <code>docker run --rm -dit --name lab1-container -p 8080:80 lab1-apache-image</code>. <br>
+                    Den image vi skapade i förra steget exponerar port 80 för HTTP, men vi vill mappa om denna eftersom port 80 möjligen redan är upptagen i host-datorns OS.<br>
+                    Eftersom vi kan skapa flera containers (t.ex. flera likadana frontend-servrar) från samma image så mappar vi portar när vi startar containern. 
+                </p>
+                <p>
+                    Man startar en container genom att ange vilken image den baseras på. 
+                    För att undvika ett generiskt namn på den kan du använda attributet <code>--name</code> enligt t.ex. <code>docker run --rm -dit --name lab1-container -p 8080:80 lab1-image</code>.
+                    <br>
+                    <code>-p 8080:80</code> är den parameter som mappar containerns port 80 till host-datorns port 8080
                 </p>
                 <ol>
                     <li>
                         Starta en container av den image du skapade i förra labben och säkerställ att du med en webbläsare kan nå den fil du lade in i webbservern. 
                     </li>
                     <li>
-                        Googla skillnaderna mellan <code>docker start</code> och <code>docker run</code>. De låter snarlika men har olika beteende.
+                        Googla skillnaderna mellan <code>docker start</code> och <code>docker run</code>. 
+                        De låter snarlika men har olika beteende.
                     </li>
                     <li>
                         Undersök även vad <code>docker run --rm</code> gör som inte vanliga <code>docker run</code> gör. 
                     </li>
                     <li>
-                        Se efter hur körläget ser ut i Docker Desktop och genom att skriva <code>docker images</code> och sedan kolla
+                        Se efter hur körläget ser ut i det grafiska gränssnittet i Docker Desktop, och från kommandoprompten genom att där skriva <code>docker images</code> (som visar status för images).
                     </li>
                     <li>
-                        Kolla i Docker Desktop hur images och containers presenteras. Prova att starta och stoppa din container från Docker Desktop.
+                        Prova att starta och stoppa din container från Docker Desktop.
                     </li>
                     <li>
-                        Kommandon som <code>docker images</code> visar vilka images som är registrerade/tillgängliga och kommandot <code>docker ps</code> visar vilka containers som körs. 
+                        Använd kommandoprompts-kommandot <code>docker ps</code> för att se vilka containers som körs. 
                     </li>
                     <li>
                         Prova gärna att starta en container till så att du har två containrar av samma image igång, men på olika portar. Detta kan vara användbart vid t.ex. lastbalansering.
                     </li>
                     <li>
-                        Surfa därefter med en webbläsare till <code>https://localhost:8080</code> och se så att du ser samma fil som ligger i katalogen <strong>Lab1</strong>.
+                        Surfa därefter med en webbläsare till <code>https://localhost:8080</code> och se så att du ser samma fil som ligger i katalogen <strong>/lab1/index.html</strong>.
                     </li>
                 </ol>
                 <p>
@@ -308,8 +327,7 @@
                 <hr>
                 <button class="hint" onclick="toggleHint('lab2', this);">Tips</button>
                 <div style="display: none;" id="lab2" class="hint">
-                    Bygg en docker-image för ditt eget bruk med kommandot <code>docker build -t lab1-apache-image .</code> (notera sista punkten) och starta den med <code>docker run --rm -dit --name lab1-container -p 8080:80 lab1-apache-image</code>.
-
+                    Starta containern från din image med <code>docker run --rm -dit --name lab1-container -p 8080:80 lab1-image</code>.
                 </div>
             </div>
     
@@ -318,9 +336,10 @@
                 <h3>Städa bland containers och images</h3>
                 <p>
                     Snart när man jobbar med containers och images blir det stökigt och många av dessa och man behöver städa.
+                    Man kan vara väldigt osentimental med containers (och faktiskt även images) eftersom man sparar receptet för att skapa nya sådana i <strong>Dockerfile</strong> och i <strong>docker-compose</strong>.
                 </p>
                 <p>
-                    I denna labb ska vi prova att stoppa körande containers och sedan ta bort både containers och images. 
+                    I denna labb ska vi därför prova att stoppa körande containers och sedan ta bort både containers och images. 
                     Vi har ju redan ritningen för infrastrukturen klar och kvar i vår <strong>Dockerfile</strong> så containers och images är inte något att vara nostalgisk över.
                 </p>
                 <p>
