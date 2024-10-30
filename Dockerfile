@@ -1,5 +1,5 @@
 FROM httpd
 
-COPY . /usr/local/apache2/htdocs/
+COPY /lab1/index.html /usr/local/apache2/htdocs/
 
 EXPOSE 80

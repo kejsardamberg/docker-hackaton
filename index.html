@@ -92,16 +92,21 @@
             button.hint {
                 margin-top: 2rem;
                 margin-bottom: 2rem;
+                position: relative;
             }
 
             div.hint {
-                margin-top: 2rem;
+                z-index: 1;
+                position: absolute;
+                bottom: 0;
                 padding: 2rem;
                 border: 3px solid #00005A;
                 background-color: skyblue;
                 color: #00005A;
-                margin-bottom: 4rem;
                 text-align: left;
+                -webkit-box-shadow: 25px 24px 12px -9px rgba(0,0,0,0.75);
+                -moz-box-shadow: 25px 24px 12px -9px rgba(0,0,0,0.75);
+                box-shadow: 25px 24px 12px -9px rgba(0,0,0,0.75);
             }
 
             #cheat-button {
@@ -168,14 +173,8 @@
     </head>
     <body onload="init()">
         <article>
-            <h1>DevOps-labbar</h1>
+            <h1>DevOps-labbar: Docker</h1>
             <br>
-            <div id="buttons">
-                <button id="previous-button" onclick="setCurrentLab(-1)">Föregående</button>
-                <button id="next-button" onclick="setCurrentLab(1)">Nästa</button>
-                <button id="cheat-button"><a href="./res/cheatsheet.html" target="_blank">Öppna cheat-sheet för kommandon</a></button>
-            </div>
-            <hr>
             <div class="lab">
                 <h2>Förberedelser</h2>
                 <h3>DevOps</h3>
@@ -200,6 +199,7 @@
                 <p>
                     Det finns även en <a href="./res/DevOps_hackaton.pptx">medföljande PowerPoint</a>, som egentligen är tänkt att förklaras igenom, men kanske hjälper den någon? 
                 </p>
+                <hr>
                 <button class="hint" onclick="toggleHint('install', this);">Tips</button>
                 <div style="display: none;" id="install" class="hint">
                     Installera <strong>Docker Desktop</strong> från <a href="https://www.docker.com/products/docker-desktop/">https://www.docker.com/products/docker-desktop/</a>
@@ -212,18 +212,21 @@
                 <h2>Lab</h2>
                 <h3>Skapa en image</h3>
                 <p>
-                    Denna övning syftar till att skapa en image med simplast tänkbara webbserver.
+                    Denna övning syftar till att skapa en image med en enkel webbserver.
                 </p>
                 <p>
-                    Tanken är att öva på att skapa en första <strong>Dockerfile</strong> med både portexponeringsinstruktioner och filkopiering.
+                    Tanken är att öva på att skapa en första <strong>Dockerfile</strong> och få den körklar med både portexponeringsinstruktioner och filkopiering.
                 </p>
                 <ol>
+                    <li>
+                        Starta <strong>Docker Desktop</strong> så att Docker-daemons är igång.
+                    </li>
                     <li>
                         Hämta hem en grund-docker-image som innehåller en webbserver (t.ex. med <code>docker pull httpd</code>).
                     </li>
                     <li>
-                        Skapa en fil med namnet <strong>Dockerfile</strong> (utan punkt eller filändelse) i rooten på ditt bibliotek. 
-                        Se till att den som bas använder den image du hämtade hem i steget innan och sedan kopierar filen .\Lab1\index.html till imagens servers publicerade web-root-katalog.
+                        Skapa en fil med namnet <strong>Dockerfile</strong> (utan punkt eller filändelse) i rooten på det bibliotek du fått hem. 
+                        Se till att den som bas använder den image du hämtade hem i steget innan och sedan kopierar filen <code>.\Lab1\index.html</code> till imagens servers publicerade web-root-katalog.
                     </li>
                     <li>
                         Bygg en egen docker-image baserad på den image med webbserver du laddade hem innan.
@@ -247,6 +250,7 @@
                 <p>
                     Användbara styrkommandon i kommandofönstret kan vara <code>docker build</code> och <code>docker images</code>.
                 </p>
+                <hr>
                 <button class="hint" onclick="toggleHint('lab1', this);">Tips</button>
                 <div style="display: none;" id="lab1" class="hint">
                     Ladda hem en grundimage med kommandot <code>docker pull httpd</code> för att ladda hem en enkel linux-kärna med en Apache webbserver på.
@@ -254,12 +258,12 @@
                     <pre>
     
     FROM httpd
-    
-    COPY . /usr/local/apache2/htdocs/
-    
+
+    COPY /lab1/index.html /usr/local/apache2/htdocs/
+
     EXPOSE 8080
+    
                     </pre>
-                    Bygg sedan en docker-image för ditt eget bruk med kommandot <code>docker build -t lab1-apache-image .</code> (notera sista punkten) och starta den med <code>docker run --rm -dit --name lab1-container -p 8080:80 lab1-apache-image</code>.
                 </div>
             </div>
     
@@ -268,6 +272,9 @@
                 <h3>Starta en container från din egen image</h3>
                 <p>
                     I denna labb startar och stoppar vi en docker-container och lär oss hantera denna både i <strong>Docker Desktop</strong> och från kommandoprompten.
+                </p>
+                <p>
+                    Man startar en container genom att ange vilken image den baseras på. För att undvika ett generiskt namn på den kan du använda attributet <code>--name</code> enligt t.ex. <code>docker run --rm -dit --name lab1-container -p 8080:80 lab1-apache-image</code>. <br>
                 </p>
                 <ol>
                     <li>
@@ -280,7 +287,7 @@
                         Undersök även vad <code>docker run --rm</code> gör som inte vanliga <code>docker run</code> gör. 
                     </li>
                     <li>
-                        Se efter hur körläget ser ut i Docker Desktop och genom att skriva <code>docker images</code> och 
+                        Se efter hur körläget ser ut i Docker Desktop och genom att skriva <code>docker images</code> och sedan kolla
                     </li>
                     <li>
                         Kolla i Docker Desktop hur images och containers presenteras. Prova att starta och stoppa din container från Docker Desktop.
@@ -291,14 +298,18 @@
                     <li>
                         Prova gärna att starta en container till så att du har två containrar av samma image igång, men på olika portar. Detta kan vara användbart vid t.ex. lastbalansering.
                     </li>
+                    <li>
+                        Surfa därefter med en webbläsare till <code>https://localhost:8080</code> och se så att du ser samma fil som ligger i katalogen <strong>Lab1</strong>.
+                    </li>
                 </ol>
                 <p>
                     Vill man se alla containers, även de som inte körs, kan man se dessa med <code>docker ps -a</code>. Detta kan vara användbart om man vill städa upp och ta bort containers.
                 </p>
+                <hr>
                 <button class="hint" onclick="toggleHint('lab2', this);">Tips</button>
                 <div style="display: none;" id="lab2" class="hint">
-                    Starta en container genom att ange vilken image den baseras på. För att undvika ett generiskt namn på den kan du använda attributet <code>--name</code> enligt t.ex. <code>docker run --rm -dit --name lab1-container -p 8080:80 lab1-apache-image</code>. <br>
-                    Surfa därefter med en webbläsare till <code>https://localhost:8080</code> och se så att du ser samma fil som ligger i katalogen <strong>Lab1</strong>.
+                    Bygg en docker-image för ditt eget bruk med kommandot <code>docker build -t lab1-apache-image .</code> (notera sista punkten) och starta den med <code>docker run --rm -dit --name lab1-container -p 8080:80 lab1-apache-image</code>.
+
                 </div>
             </div>
     
@@ -318,9 +329,10 @@
                 <ol>
                     <li>Städa bort de images och containers som inte längre används.</li>
                 </ol>
+                <hr>
                 <button class="hint" onclick="toggleHint('lab3', this);">Tips</button>
                 <div style="display: none;" id="lab3" class="hint">
-                    I denna övning kan det ånyo vara bra att ta till kommandon som <code>docker imgages</code> och <code>docker ps -a</code>.<br>
+                    I denna övning kan det ånyo vara bra att ta till kommandon som <code>docker images</code> och <code>docker ps -a</code>.<br>
                     Det kan också vara bra att känna till kommandot <code>docker stop</code>, <code>docker remove</code> och <code>docker image rm</code>.
                 </div>
             </div>
@@ -339,6 +351,7 @@
                     <li>Högerklicka på de entrys du ser. Vad har du för val?</li>
                     <li>Om du nu öppnar katalogen <strong>lab5-restserver</strong> i Visual Studio Code kan du direkt komma åt Docker både i GUI och genom VS Codes inbyggda <strong>terminal</strong>.</li>
                 </ol>
+                <hr>
             </div>
     
             <div class="lab">
@@ -351,7 +364,7 @@
                     Denna gång kör vi en Linux och en specifik version av Node.js.
                 </p>
                 <ol>
-                    <li>Börja med att hämta en ny image för en slim Linux med Node.js: <code>docker pull node:17-alpine</code>.</li>
+                    <li>Börja med att hämta en ny image för en slim Linux med Node.js: <code>docker pull node</code>. Om du vill ha en specifik version av node.js anger du vilken, t.ex. <code>:17-alpine</code>.</li>
                     <li>Gå till katalogen <strong>lab5-restserver</strong> och studera den <strong>Dockerfile</strong> som finns där. Vad kommer denna image att göra när den byggs?</li>
                     <li>Prova att bygga en image från denna katalogs <strong>Dockerfile</strong>.</li>
                     <li>Starta containern och använd webbläsaren för att hämta serverns enkla JSON-data.</li>
@@ -363,6 +376,7 @@
                 <p>
                     Det går också att trimma tiderna betänkligt genom att ändra ordningen så att mindre data läses över till imagen och mer är cachat av Docker.
                 </p>
+                <hr>
             </div>
     
             <div class="lab">
@@ -386,6 +400,7 @@
                     <li>När du nu bygger en ny image med denna fil utelämnas det som angivits i <strong>.dockerignore</strong>-filen.</li>
                     <li>Bygg denna image och starta en container och noter hur lång tid det tar och vilka steg som docker anger är cachade.</li>
                 </ol>
+                <hr>
             </div>
     
             <div class="lab">
@@ -402,6 +417,7 @@
                     <li>Öppna katalogen <strong>lab8-cachning</strong> och jämför dess <strong>Dockerfile</strong> med den i föregående övning. Vilka skillnader finns?</li>
                     <li>Jämför vilka steg som nu är cachade med den föregående övningen. Nu ska det gå liiite snabbare.</li>
                 </ol>
+                <hr>
             </div>
     
             <div class="lab">
@@ -433,6 +449,7 @@
                     I detta upplägg ska resultatet ha ändrats direkt eftersom servern detekterade att det var en 
                     förändring i filerna den baseras på och startade om sig och servar nya resultat.
                 </p>
+                <hr>
             </div>
     
             <div class="lab">
@@ -465,6 +482,7 @@
                 <p>
                     Att använda en <strong>docker-compose.yaml</strong>-fil kan underlätta arbetet med många containers med beroenden väsentligt. 
                 </p>
+                <hr>
             </div>
     
             <div class="lab">
@@ -484,6 +502,7 @@
                 <p>
                     Kolla också efter t.ex. JMeter-images. 
                 </p>
+                <hr>
             </div>
     
             <div class="lab">
@@ -500,6 +519,7 @@
                 <p>
                     Kika t.ex. på en Azure DevOps Pipelines olika möjligheter om du har tillgång till en sådan.
                 </p>
+                <hr>
             </div>
     
             <div class="lab">
@@ -508,6 +528,7 @@
                 <p>
                     Med hjälp av kommandot <code>docker commit</code> kan man skapa snapshots av containers. 
                 </p>
+                <hr>
             </div>
     
             <div class="lab">
@@ -516,8 +537,17 @@
                 <p>
                     Kubernetes används för enkel, smidig, monitorerbar, skalbar och robust drift av Docker-containers.
                 </p>
+                <hr>
             </div>
-    
+
+            <div id="buttons">
+                <button id="previous-button" onclick="setCurrentLab(-1);document.body.scrollTop = document.documentElement.scrollTop = 0;
+;">Föregående</button>
+                <button id="next-button" onclick="setCurrentLab(1);document.body.scrollTop = document.documentElement.scrollTop = 0;
+;">Nästa</button>
+                <button id="cheat-button"><a href="./res/cheatsheet.html" target="_blank">Öppna cheat-sheet för kommandon</a></button>
+            </div>
+
         </article>
     </body>
 </html>

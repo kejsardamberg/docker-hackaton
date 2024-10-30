@@ -2,6 +2,7 @@
 docker pull httpd
 docker build -t hackaton-instructions-web-image .
 docker run --rm -dit --name hackaton-instructions-container -p 80:80 hackaton-instructions-web-image
+docker images
 docker ps
 echo.
 echo.
